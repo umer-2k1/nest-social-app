@@ -9,6 +9,7 @@ import {
   MinLength,
   NotContains,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class RegisterUserDto {
   @ApiProperty({
@@ -30,6 +31,7 @@ export class RegisterUserDto {
     type: 'string',
     example: 'youremail@example.com',
   })
+  @Transform(({ value }) => value.toLowerCase())
   @IsEmail()
   email: string;
 
@@ -50,16 +52,6 @@ export class RegisterUserDto {
   })
   @NotContains(' ', { message: 'El password no debe contener espacios' })
   password: string;
-
-  @ApiProperty({
-    description: 'Confirm Password, it must be the same as the password',
-    nullable: false,
-    required: true,
-    type: 'string',
-    example: 'Password123',
-  })
-  @IsString()
-  passwordconf: string;
 
   @ApiProperty({
     description: 'User Avatar Image',
