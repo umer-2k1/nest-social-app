@@ -49,9 +49,9 @@ export class AuthService {
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const token = this.jwtService.sign({ id: user.id });
-
-    return { token };
+    const { accessToken, refreshToken } = await this.generateToken(user.id);
+    await this.updateRefreshToken(user.id, refreshToken);
+    return { accessToken, refreshToken };
   }
 
   async refreshToken(userId: string, refreshToken: string) {
@@ -70,7 +70,7 @@ export class AuthService {
     return tokens;
   }
 
-  async logout(userId: number) {
+  async logout(userId: string) {
     await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: null },

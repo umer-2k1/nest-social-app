@@ -8,6 +8,7 @@ import { isArray } from 'class-validator';
 export const GetUser = createParamDecorator((data, ctx: ExecutionContext) => {
   const req = ctx.switchToHttp().getRequest();
   const user = req.user;
+  console.log('user', user);
 
   if (!user) throw new InternalServerErrorException('Missed user');
 

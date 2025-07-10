@@ -8,6 +8,7 @@ import {
   MaxLength,
   MinLength,
   NotContains,
+  IsNotEmpty,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -19,8 +20,9 @@ export class RegisterUserDto {
     type: 'string',
     example: 'John Sample',
   })
+  @IsNotEmpty()
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   name: string;
 
   @ApiProperty({
@@ -33,6 +35,7 @@ export class RegisterUserDto {
   })
   @Transform(({ value }) => value.toLowerCase())
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
@@ -44,6 +47,7 @@ export class RegisterUserDto {
     example: 'Password123',
   })
   @IsString()
+  @IsNotEmpty()
   @MinLength(6)
   @MaxLength(16)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
