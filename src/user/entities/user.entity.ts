@@ -4,4 +4,5 @@ export class User {
   email: string;
   image?: string | null;
   role: string;
+  refreshToken?: string | null;
 }

@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterUserDto, LoginUserDto } from './dto';
 import * as bcrypt from 'bcryptjs';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +56,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshToken(userId: string, refreshToken: string) {
+  async refreshUserToken(userId: string, refreshToken: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -66,12 +67,12 @@ export class AuthService {
     if (!isTokenValid) {
       throw new UnauthorizedException('Access Denied');
     }
-    const tokens = await this.generateToken(user.id);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+
+    const { accessToken } = await this.generateToken(user.id);
+    return accessToken;
   }
 
-  async logout(userId: string) {
+  async logoutUser(userId: string) {
     await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: null },
