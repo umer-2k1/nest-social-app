@@ -18,6 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!jwtSecret) {
       throw new Error('JWT_SECRET is not defined in environment variables');
     }
+
     super({
       secretOrKey: jwtSecret,
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -27,11 +28,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<User> {
-    const { id } = payload;
+    const { sub } = payload;
 
     try {
       const user = await this.prisma.user.findUniqueOrThrow({
-        where: { id },
+        where: { id: sub },
         select: {
           id: true,
           name: true,

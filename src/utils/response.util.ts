@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 /**
  * Success Response
  * @param statusCode HTTP status code
@@ -6,16 +8,12 @@
  * @returns Standardized success response
  */
 export function SuccessResponse<T>(
+  res: Response,
   statusCode: number,
   message: string,
   data: T | null = null,
 ) {
-  return {
-    statusCode,
-    success: true,
-    message,
-    data,
-  };
+  res.status(statusCode).json({ success: true, statusCode, message, data });
 }
 
 /**
@@ -25,10 +23,10 @@ export function SuccessResponse<T>(
  * @returns Standardized error response
  */
 
-export function ErrorResponse(statusCode: number, message: string) {
-  return {
-    statusCode,
-    success: false,
-    message,
-  };
+export function ErrorResponse(
+  res: Response,
+  statusCode: number,
+  message: string,
+) {
+  res.status(statusCode).json({ success: false, statusCode, message });
 }
