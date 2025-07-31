@@ -19,14 +19,102 @@ enum Role {
   user
 }
 
+enum MediaType {
+  image
+  video
+  audio
+}
+
+enum SubscriptionType {
+  free
+  premium
+}
+
 model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  password     String
-  role         Role     @default(user)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  refreshToken String?
-  image        String?
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  bio           String?
+  role          Role           @default(user)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshToken  String?
+  image         String?
+  // relations
+  tweets        Tweet[]
+  comments      Comment[]
+  likes         Like[]
+  followers     Follows[]      @relation("followers")
+  following     Follows[]      @relation("following")
+  subscriptions Subscription[]
+}
+
+model Tweet {
+  id        String    @id @default(uuid())
+  content   String
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  media     Media[]
+  comments  Comment[]
+  likes     Like[]
+}
+
+model Media {
+  id        String    @id @default(uuid())
+  fileUrl   String
+  type      MediaType
+  tweetId   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // relations
+  tweet     Tweet     @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  tweetId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  tweetId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+}
+
+model Follows {
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // relations
+  follower    User     @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id               String           @id @default(uuid())
+  subscriptionType SubscriptionType
+  startDate        DateTime
+  endDate          DateTime
+  createdAt        DateTime         @default(now())
+  userId           String
+  // relations
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
