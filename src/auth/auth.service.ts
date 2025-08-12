@@ -4,10 +4,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { RegisterUserDto, LoginUserDto } from './dto';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/user/entities/user.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { LoginUserDto, RegisterUserDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +25,7 @@ export class AuthService {
     if (isUser) {
       throw new BadRequestException(`User already exists`);
     }
+
     const user = await this.prisma.user.create({
       data: {
         name,
@@ -53,7 +53,7 @@ export class AuthService {
     }
     const { accessToken, refreshToken } = await this.generateToken(user.id);
     await this.updateRefreshToken(user.id, refreshToken);
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user };
   }
 
   async refreshUserToken(userId: string, refreshToken: string) {

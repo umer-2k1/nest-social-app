@@ -9,7 +9,6 @@ import {
   UseGuards,
   Res,
 } from '@nestjs/common';
-import { FollowsService } from './follows.service';
 import { CreateFollowDto } from './dto/create-follow.dto';
 import { UpdateFollowDto } from './dto/update-follow.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,6 +16,7 @@ import { GetUser } from 'src/auth/decorators';
 import { User } from 'src/user/entities/user.entity';
 import { SuccessResponse } from 'src/utils/response.util';
 import { Response } from 'express';
+import { FollowsService } from './follows.service';
 
 @Controller('follows')
 export class FollowsController {
@@ -31,11 +31,6 @@ export class FollowsController {
   ) {
     await this.followsService.togglefollowUser(user.id, id);
     return SuccessResponse(res, 200, 'User fetched successfully');
-  }
-
-  @Post()
-  create(@Body() createFollowDto: CreateFollowDto) {
-    return this.followsService.create(createFollowDto);
   }
 
   @Get()

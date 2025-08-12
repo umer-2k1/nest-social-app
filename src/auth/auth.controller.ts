@@ -36,7 +36,8 @@ export class AuthController {
   }
   @Post('/sign-in')
   async signin(@Body() dto: LoginUserDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.loginUser(dto);
+    const { accessToken, refreshToken, user } =
+      await this.authService.loginUser(dto);
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
@@ -50,8 +51,17 @@ export class AuthController {
       maxAge: REFRESH_TOKEN_EXPIRES_IN_MS,
       sameSite: 'lax',
     });
+    const updatedUser = {
+      ...user,
+      password: undefined,
+    };
 
-    return SuccessResponse(res, 200, 'User logged in successfully');
+    return SuccessResponse(
+      res,
+      200,
+      'User logged in successfully',
+      updatedUser,
+    );
   }
 
   @Post('/refresh-token')

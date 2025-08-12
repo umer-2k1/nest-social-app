@@ -5,8 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import { FollowsModule } from './tweets/follows/follows.module';
-import { FollowsModule } from './follows/follows.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { TweetsModule } from './tweets/tweets.module';
 import { MediaModule } from './media/media.module';
