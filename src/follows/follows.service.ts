@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateFollowDto } from './dto/update-follow.dto';
 
 @Injectable()
 export class FollowsService {
@@ -57,21 +56,5 @@ export class FollowsService {
         },
       },
     });
-  }
-
-  findAll() {
-    return `This action returns all follows`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} follow`;
-  }
-
-  update(id: number, updateFollowDto: UpdateFollowDto) {
-    return `This action updates a #${id} follow`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} follow`;
   }
 }
