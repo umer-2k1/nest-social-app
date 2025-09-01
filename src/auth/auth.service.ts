@@ -53,6 +53,7 @@ export class AuthService {
     }
     const { accessToken, refreshToken } = await this.generateToken(user.id);
     await this.updateRefreshToken(user.id, refreshToken);
+    await this.prisma.user.update({where: {id: user.id}, data: {lastLoginAt: new Date(), }});
     return { accessToken, refreshToken, user };
   }
 
